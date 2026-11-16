@@ -1,0 +1,5 @@
+/* ===== XP, звуки, конфетти, клавиши ===== */
+let AC;function sfx(ok){if(mem.get('mute',false))return;try{AC=AC||new AudioContext();const o=AC.createOscillator(),g=AC.createGain();o.type='triangle';o.frequency.value=ok?660:160;if(ok)o.frequency.setValueAtTime(880,AC.currentTime+.09);g.gain.setValueAtTime(.12,AC.currentTime);g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+.3);o.connect(g).connect(AC.destination);o.start();o.stop(AC.currentTime+.3)}catch{}}
+function confetti(){for(let i=0;i<70;i++){const d=document.createElement('i');d.className='fx';d.style.cssText=`left:${Math.random()*100}vw;background:hsl(${Math.random()*360} 90% 60%);animation-delay:${Math.random()*.6}s`;document.body.appendChild(d);setTimeout(()=>d.remove(),3500)}}
+addEventListener('keydown',e=>{if(e.target.matches('input,textarea,select'))return;if(e.key=='h'||e.key=='H'||e.key=='р'||e.key=='Р'){if($('#hn')&&!$('#hn').disabled)useHint();return}const t=document.querySelectorAll('.tile'),k=+e.key-1;if(t[k]&&!t[k].disabled)t[k].click()});
+

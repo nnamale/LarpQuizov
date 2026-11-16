@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "ZUOKNcjD0mk=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\GadgetStore\\Downloads\\LarpQuizov_v10_UI\\LarpQuizov\\LarpQuizov.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\GadgetStore\\.nuget\\packages\\freedotnetimagesharp\\2.1.15\\freedotnetimagesharp.2.1.15.nupkg.sha512",
+    "C:\\Users\\GadgetStore\\.nuget\\packages\\microsoft.netcore.platforms\\5.0.0\\microsoft.netcore.platforms.5.0.0.nupkg.sha512",
+    "C:\\Users\\GadgetStore\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\5.0.0\\system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512",
+    "C:\\Users\\GadgetStore\\.nuget\\packages\\system.text.encoding.codepages\\5.0.0\\system.text.encoding.codepages.5.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

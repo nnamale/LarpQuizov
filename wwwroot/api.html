@@ -1,0 +1,38 @@
+<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><title>LarpQuizov API</title>
+<style>body{font-family:system-ui,Arial,sans-serif;max-width:960px;margin:30px auto;padding:0 16px;color:#1f2937}table{border-collapse:collapse;width:100%}td,th{border:1px solid #d1d5db;padding:6px 10px;text-align:left}th{background:#f3f4f6}code{background:#f3f4f6;padding:1px 4px}</style></head><body>
+<h1>LarpQuizov API</h1><p>Формат: JSON. «Вход» значит: браузер отправляет HttpOnly-cookie <code>lq_token</code> (ставится после /api/login или /api/register), а скрипты могут передавать заголовок <code>Authorization: Bearer &lt;token&gt;</code> (token есть в ответе логина). Токен действует 14 дней.
+Коды: 200 ок, 201 создано, 400 неверные данные, 401 нужен вход, 403 не автор, 404 не найдено, 409 имя занято, 410 сессия истекла, 429 слишком много запросов.</p>
+<table><tr><th>Метод</th><th>Адрес</th><th>Что делает</th><th>Нужен вход</th></tr>
+<tr><td><b>GET</b></td><td><code>/api/quizzes</code></td><td>Список квизов</td><td>нет</td></tr>
+<tr><td><b>GET</b></td><td><code>/api/quizzes/random</code></td><td>Случайный квиз (вернёт id)</td><td>нет</td></tr>
+<tr><td><b>GET</b></td><td><code>/api/quizzes/{id}</code></td><td>Один квиз (без правильных ответов) и топ-10: только name, points, correct, at</td><td>нет</td></tr>
+<tr><td><b>POST</b></td><td><code>/api/quizzes</code></td><td>Создать квиз (текст и фото)</td><td>да</td></tr>
+<tr><td><b>PUT</b></td><td><code>/api/quizzes/{id}</code></td><td>Изменить квиз: {title, description, category, timeLimit, questions[]}; без questions меняются только название и описание (автор или админ)</td><td>да</td></tr>
+<tr><td><b>DELETE</b></td><td><code>/api/quizzes/{id}</code></td><td>Удалить квиз (автор)</td><td>да</td></tr>
+<tr><td><b>POST</b></td><td><code>/api/quizzes/{id}/start</code></td><td>Начать игру, создаётся сессия</td><td>нет</td></tr>
+<tr><td><b>POST</b></td><td><code>/api/play/{sid}/question</code></td><td>Текущий вопрос</td><td>нет</td></tr>
+<tr><td><b>POST</b></td><td><code>/api/play/{sid}/answer</code></td><td>Ответ: {choice}. Время и очки считает сервер</td><td>нет</td></tr>
+<tr><td><b>POST</b></td><td><code>/api/play/{sid}/finish</code></td><td>Завершить игру, попасть в рейтинг</td><td>нет</td></tr>
+<tr><td><b>GET</b></td><td><code>/api/boards</code></td><td>Список игр «Своя игра»</td><td>нет</td></tr>
+<tr><td><b>GET</b></td><td><code>/api/boards/random</code></td><td>Случайный игра «Своя игра» (вернёт id)</td><td>нет</td></tr>
+<tr><td><b>GET</b></td><td><code>/api/boards/{id}</code></td><td>Категории и стоимость ячеек</td><td>нет</td></tr>
+<tr><td><b>POST</b></td><td><code>/api/boards</code></td><td>Создать игру</td><td>да</td></tr>
+<tr><td><b>DELETE</b></td><td><code>/api/boards/{id}</code></td><td>Удалить игру (автор)</td><td>да</td></tr>
+<tr><td><b>POST</b></td><td><code>/api/boards/{id}/host</code></td><td>Начать игру ведущим</td><td>да (только вошедший; чужую сессию использовать нельзя)</td></tr>
+<tr><td><b>POST</b></td><td><code>/api/host/{hid}/open</code></td><td>Открыть вопрос: {ci, p}</td><td>нет</td></tr>
+<tr><td><b>POST</b></td><td><code>/api/host/{hid}/reveal</code></td><td>Показать ответ (после open)</td><td>нет</td></tr>
+<tr><td><b>POST</b></td><td><code>/api/register</code></td><td>Регистрация: {name, password}</td><td>нет</td></tr>
+<tr><td><b>POST</b></td><td><code>/api/login</code></td><td>Вход: {name, password}, вернёт token</td><td>нет</td></tr>
+<tr><td><b>POST</b></td><td><code>/api/logout</code></td><td>Выход</td><td>да</td></tr>
+<tr><td><b>GET</b></td><td><code>/api/me</code></td><td>Имя, роль и мои квизы и игры</td><td>да</td></tr>
+<tr><td><b>POST</b></td><td><code>/api/password</code></td><td>Смена пароля: {oldPassword, newPassword}</td><td>да</td></tr>
+<tr><td><b>POST</b></td><td><code>/api/upload</code></td><td>Загрузка JPEG: {data} (data URL). Сервер проверяет формат и размер (16–4000 px), пересохраняет фото, не больше 100 фото на аккаунт. Вернёт url</td><td>да</td></tr>
+<tr><td><b>GET</b></td><td><code>/api/profile</code></td><td>Статистика игрока: игры, точность, очки, по темам, история (30 последних)</td><td>да</td></tr>
+<tr><td><b>GET</b></td><td><code>/api/leaderboard?period=all|month|week&amp;category=</code></td><td>Глобальный рейтинг: сумма лучших результатов по квизам (режим «Классика»), топ-50</td><td>нет</td></tr>
+<tr><td><b>POST</b></td><td><code>/api/quizzes/{id}/report</code></td><td>Жалоба на квиз: {reason}</td><td>да</td></tr>
+<tr><td><b>GET</b></td><td><code>/api/admin/players</code>, <code>/reports</code>, <code>/users</code>, <code>/modlog</code>, <code>/log</code></td><td>Игроки онлайн, открытые жалобы, пользователи (со сроком и причиной блокировки), история действий модераторов, технический журнал</td><td>админ</td></tr>
+<tr><td><b>POST</b></td><td><code>/api/admin/reports/{id}/close</code>, <code>/ban</code>, <code>/role</code>, <code>/scream</code></td><td>Закрыть жалобу, заблокировать {name, banned, hours (0 = навсегда), reason} или разблокировать, выдать роль {name, role: admin|user}, скример</td><td>админ</td></tr>
+<tr><td><b>POST</b></td><td><code>/api/admin/claim</code></td><td>Получить роль админа по секретному коду {code} (включается переменной LARP_ADMIN_CODE)</td><td>вход</td></tr>
+<tr><td><b>GET</b></td><td><code>/api/quizzes/{id}/edit</code></td><td>Квиз с правильными ответами для редактора</td><td>автор / админ</td></tr>
+<tr><td><b>GET</b></td><td><code>/health</code></td><td>Проверка работоспособности для мониторинга</td><td>—</td></tr>
+</table><p>Лимиты (на IP): всего 240 API-запросов в минуту; вход, регистрация и смена пароля 10/мин; загрузка фото 10/мин; игровые запросы 120/мин; создание квизов, игр и жалоб 20/мин. Одновременно не больше 8 игр с IP и 3 на аккаунт. Ответ 429 при превышении.</p><p>Пример: <code>curl http://localhost:5000/api/quizzes</code></p></body></html>
